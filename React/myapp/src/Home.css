@@ -22,40 +22,4 @@
   .element {
     margin-bottom: 50px;
   }
-  .section {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 56px); /* Adjust 56px to match your actual navbar height */
-}
-
-.content {
-  display: flex;
-}
-
-.left {
-  flex: 1;
-}
-
-.right {
-  flex: 1;
-}
-
-.section-image {
-  max-width: 100%;
-  height: auto;
-}
-
-.element {
-  margin-bottom: 50px;
-}
-.content {
-  display: flex;
-}
-
-.left {
-  flex: 1;
-}
-
-.right {
-  flex: 1;
-}
+  
