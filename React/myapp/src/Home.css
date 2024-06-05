@@ -5,13 +5,13 @@
     text-align: center;
   }
   
-  /* .section-heading {
+  .section-heading {
     position: absolute; 
     top: 50%; 
     right: 100px; 
     transform: translateY(-50%); 
     color: white;
-  } */
+  }
   
   .section-image {
     width: 100%; /* Ensure the image fills the container */
