@@ -1,38 +1,23 @@
-.App {
+.section {
+  position: relative; /* Make the section a positioned container */
+  padding-top: calc(100vh - 56px); /* Adjust 56px to match your actual navbar height */
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.section-heading {
+  position: absolute; /* Position the heading relative to its first positioned (not static) ancestor element */
+  top: 50%; /* Position the heading at the vertical center */
+  left: 50%; /* Position the heading at the horizontal center */
+  transform: translate(-50%, -50%); /* Center the heading both horizontally and vertically */
+  color: white; /* Adjust the color to make it visible on the image */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.section-image {
+  width: 100%; /* Ensure the image fills the container */
+  height: calc(100vh - 56px); /* Adjust 56px to match your actual navbar height */
+  object-fit: cover;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.element {
+  margin-bottom: 50px;
 }
