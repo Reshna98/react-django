@@ -1,20 +1,20 @@
 .section {
-  position: relative; /* Make the section a positioned container */
-  padding-top: calc(100vh - 56px); /* Adjust 56px to match your actual navbar height */
+  position: relative; 
+  padding-top: calc(100vh - 56px); 
   text-align: center;
 }
 
 .section-heading {
-  position: absolute; /* Position the heading relative to its first positioned (not static) ancestor element */
-  top: 50%; /* Position the heading at the vertical center */
-  left: 50%; /* Position the heading at the horizontal center */
-  transform: translate(-50%, -50%); /* Center the heading both horizontally and vertically */
-  color: white; /* Adjust the color to make it visible on the image */
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  color: white; 
 }
 
 .section-image {
-  width: 100%; /* Ensure the image fills the container */
-  height: calc(100vh - 56px); /* Adjust 56px to match your actual navbar height */
+  width: 100%;
+  height: calc(100vh - 56px); 
   object-fit: cover;
 }
 
