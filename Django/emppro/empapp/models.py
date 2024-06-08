@@ -3,21 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class Department(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 class CustomUser(AbstractUser):
-    address = models.TextField()
-    course_completed = models.CharField(max_length=255)
+    address = models.TextField(blank=True, null=True)
+    course_completed = models.CharField(max_length=255,blank=True, null=True)
     certification = models.FileField(upload_to='certifications/', blank=True, null=True)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
+    department = models.CharField(max_length=255,blank=True, null=True)
     is_developer = models.BooleanField(default=False)
-    is_team_lead = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    email_confirmed = models.BooleanField(default=False)
+    is_team_lead = models.BooleanField(default=False) 
 
     def __str__(self):
         return self.username

@@ -21,14 +21,10 @@ function Navbar1() {
             <LinkContainer to="/login">
               <Nav.Link>Login</Nav.Link>
             </LinkContainer>
-            <NavDropdown title="Register" id="basic-nav-dropdown">
-              <LinkContainer to="/registration">
-                <NavDropdown.Item>TL Registration</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/registration">
-                <NavDropdown.Item>Developer Registration</NavDropdown.Item>
-              </LinkContainer>
-            </NavDropdown>
+            <LinkContainer to="/registration">
+              <Nav.Link>Register</Nav.Link>
+            </LinkContainer>
+           
           </Nav>
         </Navbar.Collapse>
       </Container>

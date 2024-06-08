@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'emppro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'react_django',
+        'NAME': 'react_django1',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
