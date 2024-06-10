@@ -3,9 +3,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer,LoginSerializer
 import random
 import string
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
 @api_view(['POST'])
 def register(request):
@@ -14,18 +16,18 @@ def register(request):
         username = serializer.validated_data['username']
         email = serializer.validated_data['email']
         
-        # Check if username already exists
+        
         if CustomUser.objects.filter(username=username).exists():
             return Response({'message': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Check if email already exists
+       
         if CustomUser.objects.filter(email=email).exists():
             return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Generate a random 8-character password
+        
         password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 
-        # Create the user with the provided data and generated password
+       
         user = CustomUser.objects.create_user(
             username=serializer.validated_data['username'],
             email=serializer.validated_data['email'],
@@ -38,7 +40,7 @@ def register(request):
             is_team_lead=serializer.validated_data.get('is_team_lead', False),
         )
 
-        # Send confirmation email
+       
         subject = 'Welcome to Our Platform'
         message = f'''
         Dear {user.username},
@@ -58,3 +60,25 @@ def register(request):
 
         return Response({'message': 'User registered successfully. Confirmation email sent.'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def login(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
+        
+        user = authenticate(username=username, password=password)
+        
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            role = 'admin' if user.is_superuser else ('team_lead' if user.is_team_lead else 'developer')
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'role': role
+            })
+        else:
+            return Response({'message': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    return Response({'message': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)

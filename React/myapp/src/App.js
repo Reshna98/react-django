@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import RegistrationForm from './RegistrationForm';
+import Tldash from './Tldash';
+import Developerdash from './Developerdash';
+import Admindash from './Admindash';
 
 function App() {
   return (
@@ -11,6 +14,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<RegistrationForm/>} />
+        <Route path="/admin-dashboard" element={<Admindash />} />
+        <Route path="/tl-dashboard" element={<Tldash />} />
+        <Route path="/developer-dashboard" element={<Developerdash />} />
       </Routes>
     </Router>
   );

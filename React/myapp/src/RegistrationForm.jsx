@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Col } from "react-bootstrap";
 import axios from 'axios';
 import "./Home.css";
 import Navbar1 from "./Navbar1";
+import { useNavigate } from 'react-router-dom'; 
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,8 @@ const RegistrationForm = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -36,20 +38,32 @@ const RegistrationForm = () => {
         },
       });
       console.log(response.data);
+      setTimeout(() => {
+         navigate('/login'); // Redirect to login page after success
+      }, 2000);
       setShowSuccessAlert(true);
       setShowErrorAlert(false);
     } catch (error) {
       console.error(error.response.data);
+      let errorMessage = "";
+      if (error.response.data.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response.data.username) {
+        errorMessage = error.response.data.username;
+      } else if (error.response.data.email) {
+        errorMessage = error.response.data.email;
+      }
+      setErrorMessage(errorMessage);
       setShowSuccessAlert(false);
       setShowErrorAlert(true);
     }
     setLoading(false);
-  };
+  }
 
   return (
     <>
       <Navbar1 />
-      <div className="sign-in__wrapper">
+      <div className="sign-in__wrapper1" style={{ overflow: "auto" }} >
         <div className="sign-in__backdrop"></div>
         <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
           <img
@@ -75,9 +89,31 @@ const RegistrationForm = () => {
               onClose={() => setShowErrorAlert(false)}
               dismissible
             >
-              Registration failed. Please try again.
+              {errorMessage} {/* Display error message */}
             </Alert>
           )}
+          
+          
+          <Form.Group className="mb-2" controlId="checkboxes">
+         <Form.Check
+              inline
+              type="checkbox"
+              label="Developer"
+               checked={formData.is_developer}
+                 onChange={(e) =>
+              setFormData({ ...formData, is_developer: e.target.checked })
+                }
+              />
+            <Form.Check
+              inline
+              type="checkbox"
+              label="Team Lead"
+              checked={formData.is_team_lead}
+              onChange={(e) =>
+              setFormData({ ...formData, is_team_lead: e.target.checked })
+                 }
+              />
+</Form.Group>
           <Form.Group className="mb-2" controlId="username">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -153,28 +189,10 @@ const RegistrationForm = () => {
               <option value="React">React</option>
             </Form.Control>
           </Form.Group>
-          <Form.Group className="mb-2" controlId="is_developer">
-            <Form.Check
-              type="checkbox"
-              label="Developer"
-              checked={formData.is_developer}
-              onChange={(e) =>
-                setFormData({ ...formData, is_developer: e.target.checked })
-              }
-            />
-          </Form.Group>
-          <Form.Group className="mb-2" controlId="is_team_lead">
-            <Form.Check
-              type="checkbox"
-              label="Team Lead"
-              checked={formData.is_team_lead}
-              onChange={(e) =>
-                setFormData({ ...formData, is_team_lead: e.target.checked })
-              }
-            />
-          </Form.Group>
+ 
+
           {!loading ? (
-            <Button className="w-100" variant="primary" type="submit">
+            <Button className="w-100" variant="primary" type="submit" >
               Register
             </Button>
           ) : (
