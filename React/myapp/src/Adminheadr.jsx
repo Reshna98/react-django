@@ -1,9 +1,10 @@
 import React from 'react'
+import "./Admin.css";
 import 
  {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify}
  from 'react-icons/bs'
 
-function AdminHeader({OpenSidebar}) {
+function Adminheadr({OpenSidebar}) {
   return (
     <header className='header'>
         <div className='menu-icon'>
@@ -21,4 +22,4 @@ function AdminHeader({OpenSidebar}) {
   )
 }
 
-export default Adminheader
+export default Adminheadr
