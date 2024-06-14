@@ -6,18 +6,17 @@ import Adminheadr from './Adminheadr'
 import Adminsidebar from './Adminsidebar'
 import Adminhome from './Adminhome'
 
-function Admindash() {
-  const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
-
-  const OpenSidebar = () => {
-    setOpenSidebarToggle(!openSidebarToggle)
-  }
-
+function Admindash(){
   return (
-    <div className='grid-container'>
-      <Adminheadr OpenSidebar={OpenSidebar}/>
-      <Adminsidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
-      <Adminhome />
+    <div className='container-fluid bg-secondary min-vh-100'>
+      <div className='row'>
+        <div className='col-2 bg-white vh-100'>
+          <Adminsidebar/>
+        </div>
+        <div className='col'>
+          <Adminhome/>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,65 +1,47 @@
-
 import React from 'react';
-// import "./Admin.css";
-import { BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, 
-  BsListCheck, BsMenuButtonWideFill, BsFillGearFill } from 'react-icons/bs';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // Correct import syntax
+// import './Admin.css';
 
-function Adminsidebar({ openSidebarToggle, OpenSidebar }) {
+function Adminsidebar() {
   return (
-    <aside id="sidebar" className={`sidebar ${openSidebarToggle ? 'sidebar-responsive' : ''}`}>
-        <div className='sidebar-title'>
-            <div className='sidebar-brand'>
-                <BsCart3  className='icon_header'/> SHOP
-            </div>
-            <span className='icon close_icon' onClick={OpenSidebar}>X</span>
-        </div>
-
-        <div className="row">
-            <div className="col">
-                <ul className='sidebar-list'>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsGrid1X2Fill className='icon'/> Dashboard
-                        </a>
-                    </li>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsFillArchiveFill className='icon'/> Products
-                        </a>
-                    </li>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsFillGrid3X3GapFill className='icon'/> Categories
-                        </a>
-                    </li>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsPeopleFill className='icon'/> Customers
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div className="col">
-                <ul className='sidebar-list'>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsListCheck className='icon'/> Inventory
-                        </a>
-                    </li>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsMenuButtonWideFill className='icon'/> Reports
-                        </a>
-                    </li>
-                    <li className='sidebar-list-item'>
-                        <a href="">
-                            <BsFillGearFill className='icon'/> Setting
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </aside>
+    <div className="bg-white sidebar p-2">
+      <div className="m-2">
+        <i className='bi bi-bootstrap-fill fs-3 me-2'></i>
+        <span className='brand-name fs-4 '>IT-Company</span>
+      </div>
+      <hr className='text-dark'/>
+      <div className='list-group list-group-flush'>
+        <a className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill fs-5 me-3'></i>
+          <span className='fs-5'>Dashboard</span>
+        </a>
+        <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>Products</span>
+        </a>
+         <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>TL</span>
+        </a>
+         <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>Developer</span>
+        </a>
+         <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>Reports</span>
+        </a>
+        <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>Reports</span>
+        </a>
+        <a  className='list-group-item  py-2'>
+          <i className='bi bi-bootstrap-fill me-3'></i>
+          <span className='fs-5'>Reports</span>
+        </a>
+       
+      </div>
+    </div>
   );
 }
 
