@@ -2,23 +2,27 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/js/dist/dropdown';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/js/dist/collapse';
 import { Link } from 'react-router-dom';
+import './Admin.css';
+
+
 
 function Adminheader() {
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-white px-3">
-        <i className='bi bi-justify-left fs-4'></i>
+
+    <nav className="navbar navbar-expand-sm navbar-dark bg-transparent px-3">
+  
     
       <button 
-        className="navbar-toggler" 
+        className="navbar-toggler d-lg-none" 
         type="button" 
         data-bs-toggle="collapse" 
         data-bs-target="#navbarNav" 
         aria-controls="navbarNav" 
         aria-expanded="false" 
         aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-      </button>
+        <i className='bi bi-justify'></i></button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
           <li className="nav-item dropdown">
@@ -31,7 +35,7 @@ function Adminheader() {
               aria-expanded="false">
               Admin
             </a>
-            <ul className="dropdown-menu" aria-labelledby="dropdownId">
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownId">
               <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
               <li><Link className="dropdown-item" to="/logout">Logout</Link></li>
             </ul>
