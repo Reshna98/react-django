@@ -35,10 +35,10 @@ function Adminsidebar() {
           <i className='bi bi-bootstrap-fill me-3'></i>
           <span className='fs-5'>Reports</span>
         </a>
-        <a  className='list-group-item  py-2'>
+        {/* <a  className='list-group-item  py-2'>
           <i className='bi bi-bootstrap-fill me-3'></i>
           <span className='fs-5'>Reports</span>
-        </a>
+        </a> */}
        
       </div>
     </div>
