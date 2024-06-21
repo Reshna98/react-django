@@ -1,6 +1,6 @@
 from django.core.mail import send_mail
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from .models import CustomUser
 from .serializers import CustomUserSerializer,LoginSerializer
@@ -8,6 +8,8 @@ import random
 import string
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from rest_framework import permissions
+from rest_framework.permissions import AllowAny,IsAdminUser,IsAuthenticated
 
 @api_view(['POST'])
 def register(request):
@@ -75,10 +77,20 @@ def login(request):
             role = 'admin' if user.is_superuser else ('team_lead' if user.is_team_lead else 'developer')
             return Response({
                 'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'access': str(refresh.access_token),    
                 'role': role
             })
         else:
             return Response({'message': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
     
     return Response({'message': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Project_assign(request):
+    serializer = ProjectSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Element } from 'react-scroll';
 import Navbar1 from './Navbar1';
-import './Home.css';
+import './hoMe.css';
 import { Container, Row, Col,Card, Carousel } from 'react-bootstrap';
 
 

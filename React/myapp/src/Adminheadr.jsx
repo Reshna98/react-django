@@ -1,49 +1,24 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/js/dist/dropdown';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/js/dist/collapse';
-import { Link } from 'react-router-dom';
-import './Admin.css';
+import React from 'react'
+import 
+ {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify}
+ from 'react-icons/bs'
 
-
-
-function Adminheader() {
+function Adminheadr({OpenSidebar}) {
   return (
-
-    <nav className="navbar navbar-expand-sm navbar-dark bg-transparent px-3">
-  
-    
-      <button 
-        className="navbar-toggler d-lg-none" 
-        type="button" 
-        data-bs-toggle="collapse" 
-        data-bs-target="#navbarNav" 
-        aria-controls="navbarNav" 
-        aria-expanded="false" 
-        aria-label="Toggle navigation">
-        <i className='bi bi-justify'></i></button>
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
-          <li className="nav-item dropdown">
-            <a 
-              className="nav-link dropdown-toggle" 
-              href="#" 
-              id="dropdownId" 
-              role="button" 
-              data-bs-toggle="dropdown" 
-              aria-expanded="false">
-              Admin
-            </a>
-            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownId">
-              <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
-              <li><Link className="dropdown-item" to="/logout">Logout</Link></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  );
+    <header className='header'>
+        <div className='menu-icon'>
+            <BsJustify className='icon' onClick={OpenSidebar}/>
+        </div>
+        <div className='header-left'>
+            <BsSearch  className='icon'/>
+        </div>
+        <div className='header-right'>
+            <BsFillBellFill className='icon'/>
+            <BsFillEnvelopeFill className='icon'/>
+            <BsPersonCircle className='icon'/>
+        </div>
+    </header>
+  )
 }
 
-export default Adminheader;
+export default Adminheadr

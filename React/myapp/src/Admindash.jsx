@@ -1,28 +1,23 @@
-import { useState } from 'react';
-import './Admin.css';
-
-
-import Adminsidebar from './Adminsidebar';
-import Adminhome from './Adminhome';
+import { useState } from 'react'
+import styles from './adMin.css';
+import Adminheadr from './Adminheadr'
+import Adminsidebar from './Adminsidebar'
+import Adminhome from './Adminhome'
 
 function Admindash() {
- 
-  return (
-    <div className='container-fluid bg-secondary min-vh-100'>
-      <div className='row'>
-     
-          <div className='col-2 bg-white vh-100 position-fixed'>
-            <Adminsidebar />
-          </div>
-      
-    <div className='col-2'></div>
-        <div className= 'col'>
+  const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
 
-          <Adminhome />
-        </div>
-      </div>
+  const OpenSidebar = () => {
+    setOpenSidebarToggle(!openSidebarToggle)
+  }
+
+  return (
+    <div className={styles.gridContainer}>
+      <Adminheadr OpenSidebar={OpenSidebar}/>
+      <Adminsidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
+      <Adminhome />
     </div>
-  );
+  )
 }
 
-export default Admindash;
+export default Admindash

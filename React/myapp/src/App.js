@@ -6,6 +6,7 @@ import RegistrationForm from './RegistrationForm';
 import Tldash from './Tldash';
 import Developerdash from './Developerdash';
 import Admindash from './Admindash';
+import Adminproject from './Adminproject';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
         <Route path="/admin-dashboard" element={<Admindash />} />
         <Route path="/tl-dashboard" element={<Tldash />} />
         <Route path="/developer-dashboard" element={<Developerdash />} />
+        {/* <Route path="/project" element={<Adminproject />} /> */}
+
       </Routes>
     </Router>
   );
