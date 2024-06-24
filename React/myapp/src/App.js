@@ -18,7 +18,7 @@ function App() {
         <Route path="/admin-dashboard" element={<Admindash />} />
         <Route path="/tl-dashboard" element={<Tldash />} />
         <Route path="/developer-dashboard" element={<Developerdash />} />
-        {/* <Route path="/project" element={<Adminproject />} /> */}
+        <Route path="/project" element={<Adminproject />} />
 
       </Routes>
     </Router>

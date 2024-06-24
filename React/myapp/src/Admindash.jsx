@@ -1,23 +1,45 @@
-import { useState } from 'react'
-// import styles from './adMin.css';
-import Adminheadr from './Adminheadr'
-import Adminsidebar from './Adminsidebar'
-import Adminhome from './Adminhome'
+import React, { useEffect, useState } from 'react';
+import Adminheadr from './Adminheadr';
+import Adminsidebar from './Adminsidebar';
+import Adminhome from './Adminhome';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.js';
 
 function Admindash() {
-  const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
+  const [toggle, setToggle] = useState(window.innerWidth <= 768);
 
-  const OpenSidebar = () => {
-    setOpenSidebarToggle(!openSidebarToggle)
-  }
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setToggle(true);
+      } else {
+        setToggle(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
-    <div className={styles.gridContainer}>
-      {/* <Adminheadr OpenSidebar={OpenSidebar}/> */}
-      <Adminsidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
-      {/* <Adminhome /> */}
+    <div className="d-flex">
+      <div className={toggle ? "d-none" : "w-auto position-fixed"}>
+        <Adminsidebar />
+      </div>
+      <div className={`flex-grow-1 ${toggle ? "" : "ms-sidebar"}`}>
+        <Adminheadr Toggle={handleToggle} />
+        <Adminhome />
+      </div>
     </div>
-  )
+  );
 }
 
-export default Admindash
+export default Admindash;

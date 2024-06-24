@@ -1,45 +1,49 @@
 import React from 'react';
-import { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill } from 'react-icons/bs';
-import './adminHome.css'; // Import the CSS file
 
 function Adminhome() {
   return (
-    <main className='main-container'>
-      <div className='main-title'>
-        <h3>DASHBOARD</h3>
+    <div className='p-5 bg-light'>
+      <div className='container-fluid'>
+        <div className='row'>
+          <div className='col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light'>
+            <div className='py-4 px-2 d-flex justify-content-around align-items-center bg-white border border-secondary shadow-sm'>
+              <i className='bi bi-currency-dollar fs-1'></i>
+              <div>
+                <span>sales</span>
+                <h2>234</h2>
+              </div>
+            </div>
+          </div>
+          <div className='col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light'>
+            <div className='py-4 px-2 d-flex justify-content-around align-items-center bg-white border border-secondary shadow-sm'>
+              <i className='bi bi-currency-dollar fs-1'></i>
+              <div>
+                <span>sales</span>
+                <h2>234</h2>
+              </div>
+            </div>
+          </div>
+          <div className='col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light'>
+            <div className='py-4 px-2 d-flex justify-content-around align-items-center bg-white border border-secondary shadow-sm'>
+              <i className='bi bi-currency-dollar fs-1'></i>
+              <div>
+                <span>sales</span>
+                <h2>234</h2>
+              </div>
+            </div>
+          </div>
+          <div className='col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light'>
+            <div className='py-4 px-2 d-flex justify-content-around align-items-center bg-white border border-secondary shadow-sm'>
+              <i className='bi bi-currency-dollar fs-1'></i>
+              <div>
+                <span>sales</span>
+                <h2>234</h2>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className='main-cards'>
-        <div className='card'>
-          <div className='card-inner'>
-            <h3>PRODUCTS</h3>
-            <BsFillArchiveFill className='card_icon'/>
-          </div>
-          <h1>300</h1>
-        </div>
-        <div className='card'>
-          <div className='card-inner'>
-            <h3>CATEGORIES</h3>
-            <BsFillGrid3X3GapFill className='card_icon'/>
-          </div>
-          <h1>12</h1>
-        </div>
-        <div className='card'>
-          <div className='card-inner'>
-            <h3>CUSTOMERS</h3>
-            <BsPeopleFill className='card_icon'/>
-          </div>
-          <h1>33</h1>
-        </div>
-        <div className='card'>
-          <div className='card-inner'>
-            <h3>ALERTS</h3>
-            <BsFillBellFill className='card_icon'/>
-          </div>
-          <h1>42</h1>
-        </div>
-      </div>
-    </main>
+    </div>
   );
 }
 
