@@ -21,8 +21,11 @@ function Navbar1() {
             <LinkContainer to="/login">
               <Nav.Link>Login</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/registration">
-              <Nav.Link>Register</Nav.Link>
+            <LinkContainer to="/register-team-lead">
+              <Nav.Link>TL Register</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/register-developer">
+              <Nav.Link>Developer Register</Nav.Link>
             </LinkContainer>
            
           </Nav>

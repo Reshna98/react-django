@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import Adminheadr from './Adminheadr';
+import Adminsidebar from './Adminsidebar';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
-import Tlheadr from './Tlheader';
-import TlSidebar from './Tlsidebar';
-import Tlhome from './Tlhome';
+import AdminCreateUserForm from './AdminCreateUserForm';
 
-function Tldash() {
+function Aduser() {
   const [toggle, setToggle] = useState(window.innerWidth <= 768);
 
   const handleToggle = () => {
@@ -33,14 +33,14 @@ function Tldash() {
   return (
     <div className="d-flex">
       <div className={toggle ? "d-none" : "w-auto position-fixed"}>
-        <TlSidebar />
+        <Adminsidebar />
       </div>
-      <div className={`flex-grow-1 ${toggle ? "" : "ms-sidebar"}`}>
-        <Tlheadr Toggle={handleToggle} />
-        <Tlhome />
+      <div className={`flex-grow-1 ${toggle ? "w-100" : "ms-sidebar"}`}>
+        <Adminheadr Toggle={handleToggle} />
+        <AdminCreateUserForm />
       </div>
     </div>
   );
 }
 
-export default Tldash;
+export default Aduser;

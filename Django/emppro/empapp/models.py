@@ -11,6 +11,33 @@ class CustomUser(AbstractUser):
     department = models.CharField(max_length=255,blank=True, null=True)
     is_developer = models.BooleanField(default=False)
     is_team_lead = models.BooleanField(default=False) 
+    APPROVAL_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('declined', 'Declined'),
+    ]
+    # is_approved = models.CharField(max_length=10, choices=APPROVAL_CHOICES, default='pending')
+    is_approved = models.CharField(
+        max_length=10,
+        choices=APPROVAL_CHOICES,
+        default='pending',
+       
+    )
+    
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.is_approved = 'approved'
+        super().save(*args, **kwargs)
+
+    def promote_to_team_lead(self):
+        self.is_team_lead = True
+        self.is_developer = False
+        self.save()
+
+    def demote_to_developer(self):
+        self.is_team_lead = False
+        self.is_developer = True
+        self.save()
 
     def __str__(self):
         return self.username

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import Axiosinstance from './Axiosinstance'; // Adjust the import path based on your project structure
 
 const Project = () => {
   const [project, setProject] = useState({
@@ -11,6 +11,8 @@ const Project = () => {
     end_date: '',
     attachments: null,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,42 +31,57 @@ const Project = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     const formData = new FormData();
     for (const key in project) {
+      if (key === 'attachments' && project.attachments === null) {
+        continue; // Skip appending attachments if it's null
+      }
       formData.append(key, project[key]);
     }
 
-    // Retrieve the token from local storage
-    const token = localStorage.getItem('authToken');
-    console.log(token);
-
     try {
-      const response = await axios.post('http://localhost:8000/Project_assign', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`, // Include the token in the headers
-        },
-      });
+      const response = await Axiosinstance.post('Project_assign/', formData);
       console.log(response.data);
       alert('Project added successfully!');
+      setProject({
+        client_name: '',
+        project_name: '',
+        description: '',
+        requirements: '',
+        start_date: '',
+        end_date: '',
+        attachments: null,
+      });
     } catch (error) {
-      console.error(error);
+      console.error('Add project error:', error);
       if (error.response) {
         if (error.response.status === 401) {
-          alert('Unauthorized: Token expired or invalid.');
+          setError('Unauthorized: Token expired or invalid.');
           // Handle token refresh or re-login if needed
         } else {
-          alert(`Error: ${error.response.data.detail}`);
+          // Handle specific error messages if available
+          const errorMessage = error.response.data && error.response.data.detail
+            ? `Error: ${error.response.data.detail}`
+            : 'Error: An error occurred while adding the project.';
+          setError(errorMessage);
         }
+      } else if (error.request) {
+        setError('Network error: Could not communicate with the server.');
       } else {
-        alert('An error occurred while adding the project.');
+        setError('Unexpected error occurred.');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
       <div className="col-md-6">
+      <h2 className="text-center mb-4">Add Projects</h2>
         <form onSubmit={handleSubmit} className="project-form">
           <div className="form-group">
             <label htmlFor="client_name">Client Name:</label>
@@ -136,7 +153,7 @@ const Project = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="form-group p-2">
             <label htmlFor="attachments">Attachments:</label>
             <input
               type="file"
@@ -146,7 +163,10 @@ const Project = () => {
               onChange={handleFileChange}
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-block">Add Project</button>
+          {error && <div className="alert alert-danger">{error}</div>}
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+            {loading ? 'Adding Project...' : 'Add Project'}
+          </button>
         </form>
       </div>
     </div>
