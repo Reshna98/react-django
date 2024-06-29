@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
-import TLAssignments from './TLAssignments';
+
 import Tlsidebar from './Tlsidebar';
 import Tlheader from './Tlheader';
+import AssignModuleForm from './AssignModuleForm';
 
-function Tlassign() {
+function Tlassignpro() {
   const [toggle, setToggle] = useState(window.innerWidth <= 768);
 
   const handleToggle = () => {
@@ -37,10 +38,10 @@ function Tlassign() {
       </div>
       <div className={`flex-grow-1 ${toggle ? "w-100" : "ms-sidebar"}`}>
         <Tlheader Toggle={handleToggle} />
-        <TLAssignments />
+        <AssignModuleForm />
       </div>
     </div>
   );
 }
 
-export default Tlassign;
+export default Tlassignpro;

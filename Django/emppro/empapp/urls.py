@@ -2,7 +2,7 @@ from empapp import views
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView 
 from rest_framework.routers import DefaultRouter 
-
+from django.urls import re_path
 
 
 urlpatterns = [
@@ -29,8 +29,10 @@ urlpatterns = [
     path('get_approved_users/', views.get_approved_users, name='get_approved_users'),
     path('logout/',views.logout, name='logout'),
     path('get_tl_assignments/',views.get_tl_assignments, name='get_tl_assignments'),
+    path('project_details/<int:project_id>/', views.project_details, name='project_details'),
+    path('serve_project_attachment/<int:projectId>/',views.serve_project_attachment, name='serve_project_attachment'),
     
-
+    # other URL patterns
 
   
 ]

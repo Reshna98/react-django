@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
-import Tlheadr from './Tlheader';
+import Tlheader from './Tlheader';
 import TlSidebar from './Tlsidebar';
 import Tlhome from './Tlhome';
 
@@ -36,7 +36,7 @@ function Tldash() {
         <TlSidebar />
       </div>
       <div className={`flex-grow-1 ${toggle ? "" : "ms-sidebar"}`}>
-        <Tlheadr Toggle={handleToggle} />
+        <Tlheader Toggle={handleToggle} />
         <Tlhome />
       </div>
     </div>

@@ -3,13 +3,15 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view,permission_classes,action
 from rest_framework.response import Response
 from .models import CustomUser,Project,Assignment
-from .serializers import CustomUserSerializer,LoginSerializer,ProjectSerializer,AssignmentSerializer,AdminUserCreateSerializer
+from .serializers import CustomUserSerializer,LoginSerializer,ProjectSerializer,AssignmentSerializer,AdminUserCreateSerializer,TLassignmentSerializer,TlProjectSerializer,TlassignSerializer,DeveloperSerializer
 import random
 import string
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework import permissions
 from rest_framework.permissions import AllowAny,IsAdminUser,IsAuthenticated
+from django.shortcuts import get_object_or_404
+
 
 
 
@@ -257,7 +259,82 @@ def get_tl_assignments(request):
     user = request.user
     if user.is_team_lead:
         assignments = Assignment.objects.filter(team_lead=user)
-        serializer = AssignmentSerializer(assignments, many=True)
+        serializer = TLassignmentSerializer(assignments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({'detail': 'User is not a team lead'}, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def project_details(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    serializer = TlProjectSerializer(project)
+    return Response(serializer.data)
+
+
+from django.http import HttpResponse
+from django.conf import settings
+import os
+from django.http import HttpResponse, Http404
+def serve_project_attachment(request, projectId):
+    project = get_object_or_404(Project, pk=projectId)
+
+    if project.attachments:
+        file_path = project.attachments.path
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/octet-stream")
+                filename = os.path.basename(file_path)
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                print(response.headers)
+                return response
+        else:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=404)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
+def get_developers_assigned_to_tl(request):
+    tl = request.user  # Assuming TL is authenticated user
+    developers = CustomUser.objects.filter(is_developer=True, assignment__team_lead=tl)
+    serializer = DeveloperSerializer(developers, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
+def get_projects_assigned_to_tl(request):
+    tl = request.user  # Assuming TL is authenticated user
+    assignments = Assignment.objects.filter(team_lead=tl)
+    projects = Project.objects.filter(id__in=assignments.values_list('project_id', flat=True))
+    serializer = TlassignSerializer(projects, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
+def assign_module_to_developer(request):
+    data = request.data
+    developer_id = data.get('developer')
+    project_id = data.get('project')
+
+    tl = request.user  # Assuming TL is authenticated user
+    assignment = get_object_or_404(Assignment, team_lead=tl, project_id=project_id)
+
+    # Create or update module assignment for the selected developer
+    developer = get_object_or_404(CustomUser, id=developer_id)
+    module_assignment, created = ModuleAssignment.objects.get_or_create(
+        module__assignment=assignment,
+        developer=developer,
+        defaults={
+            'start_date': assignment.start_date,
+            'end_date': assignment.end_date,
+        }
+    )
+
+    if not created:
+        module_assignment.start_date = assignment.start_date
+        module_assignment.end_date = assignment.end_date
+        module_assignment.save()
+
+    return Response({'message': 'Module assigned successfully.'}, status=status.HTTP_201_CREATED)
+

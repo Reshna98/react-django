@@ -204,3 +204,39 @@ class AdminUserCreateSerializer(serializers.Serializer):
         print(admin_notification_message)
 
         return user
+
+class TLassignmentSerializer(serializers.ModelSerializer):
+    project_name = serializers.SerializerMethodField()
+    tl_name = serializers.SerializerMethodField()
+    project_id = serializers.IntegerField(source='project.id')
+
+    def get_project_name(self, obj):
+        return obj.project.project_name
+
+    def get_tl_name(self, obj):
+        return obj.team_lead.username
+
+    class Meta:
+        model = Assignment
+        fields = ['project_id', 'project_name', 'tl_name', 'start_date', 'end_date']
+
+
+class TlProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'client_name', 'project_name', 'description', 'requirements', 'start_date', 'end_date', 'attachments']
+    def get_attachments_url(self, obj):
+        request = self.context.get('request')
+        if obj.attachments:
+            return request.build_absolute_uri(obj.attachments.url)
+        return None
+
+class DeveloperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username']
+
+class TlassignSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'project_name']

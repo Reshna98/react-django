@@ -49,6 +49,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Axiosinstance = axios.create({
   baseURL: 'http://localhost:8000/',
+  headers: {
+    'Content-Type': 'application/json',
+    // Add any additional headers if necessary
+}
 });
 
 Axiosinstance.interceptors.request.use(

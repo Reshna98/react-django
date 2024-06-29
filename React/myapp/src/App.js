@@ -19,6 +19,8 @@ import AdminCreateUserForm from './AdminCreateUserForm.jsx';
 import Aduser from './Aduser.jsx';
 import Addelete from './Addelete.jsx';
 import Adpromote from './Adpromote.jsx';
+import Tlassign from './TLassign.jsx';
+import Tlassignpro from './Tlassignpro.jsx';
 
 
 function App() {
@@ -40,6 +42,9 @@ function App() {
         <Route path="/add" element={<Aduser/>} />
         <Route path="/users" element={<Addelete/>} />
         <Route path="/promote" element={<Adpromote/>} />
+        <Route path="/tlnotification" element={<Tlassign/>} />
+        <Route path="/tl-dashboard" element={<Tldash />} />
+        <Route path="/tlassignpro" element={<Tlassignpro/>} />
 
 
       </Routes>
