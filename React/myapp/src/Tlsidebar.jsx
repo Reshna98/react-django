@@ -16,7 +16,7 @@ function TlSidebar() {
     <div className='sidebar bg-dark text-white vh-100 py-3 ps-3 pe-4'>
       <div className='p-2'>
         <i className='bi bi-code-slash p-2 mt-auto' />
-        <span className='fs-3 text-white'>Admin</span>
+        <span className='fs-3 text-white'>TL</span>
       </div>
       <hr className='text-white mt-2 mb-4' />
       <ul className='nav flex-column '>
