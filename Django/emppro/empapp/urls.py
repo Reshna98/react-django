@@ -31,8 +31,28 @@ urlpatterns = [
     path('get_tl_assignments/',views.get_tl_assignments, name='get_tl_assignments'),
     path('project_details/<int:project_id>/', views.project_details, name='project_details'),
     path('serve_project_attachment/<int:projectId>/',views.serve_project_attachment, name='serve_project_attachment'),
-    
+    path('create_module/', views.create_module, name='create_module'),
+    path('get_assignments/', views.get_assignments, name='get_assignments'),
+    path('assign_module_to_developer/', views.assign_module_to_developer, name='assign_module_to_developer'),
+    path('get_developerss/', views.get_developerss, name='get_developerss'),
+    path('get_moduless/', views.get_moduless, name='get_moduless'),
+    path('tl_profile/',views.tl_profile, name='tl_profile'),
+    path('download_attachment/<int:projectId>/', views.download_attachment, name='download_attachment'),
+    path('download_certification/<int:userId>/', views.download_certification, name='download_certification'),
+    path('update_profile/', views.update_tl_profile, name='update_tl_profile'),
+    path('tllogout/',views.tllogout, name='tllogout'),
+
+    # path('/', views., name=''),
+    # path('/', views., name=''),
+    # path('/', views., name=''),
+    # path('/', views., name=''),
+    # path('/', views., name=''),
+    # path('/', views., name=''),
+
+
+
+
     # other URL patterns
 
-  
+ 
 ]

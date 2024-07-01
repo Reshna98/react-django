@@ -29,11 +29,59 @@ const Project = () => {
     }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError('');
+
+  //   const formData = new FormData();
+  //   for (const key in project) {
+  //     if (key === 'attachments' && project.attachments === null) {
+  //       continue; // Skip appending attachments if it's null
+  //     }
+  //     formData.append(key, project[key]);
+  //   }
+
+  //   try {
+  //     const response = await Axiosinstance.post('Project_assign/', formData);
+  //     console.log(response.data);
+  //     alert('Project added successfully!');
+  //     setProject({
+  //       client_name: '',
+  //       project_name: '',
+  //       description: '',
+  //       requirements: '',
+  //       start_date: '',
+  //       end_date: '',
+  //       attachments: null,
+  //     });
+  //   } catch (error) {
+  //     console.error('Add project error:', error);
+  //     if (error.response) {
+  //       if (error.response.status === 401) {
+  //         setError('Unauthorized: Token expired or invalid.');
+  //         // Handle token refresh or re-login if needed
+  //       } else {
+  //         // Handle specific error messages if available
+  //         const errorMessage = error.response.data && error.response.data.detail
+  //           ? `Error: ${error.response.data.detail}`
+  //           : 'Error: An error occurred while adding the project.';
+  //         setError(errorMessage);
+  //       }
+  //     } else if (error.request) {
+  //       setError('Network error: Could not communicate with the server.');
+  //     } else {
+  //       setError('Unexpected error occurred.');
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
+  
     const formData = new FormData();
     for (const key in project) {
       if (key === 'attachments' && project.attachments === null) {
@@ -41,9 +89,22 @@ const Project = () => {
       }
       formData.append(key, project[key]);
     }
-
+  
+    // Log FormData content
+    for (let [key, value] of formData.entries()) {
+      if (key === 'attachments' && value instanceof File) {
+        console.log(key, value.name); // Log file name for attachments
+      } else {
+        console.log(key, value);
+      }
+    }
+  
     try {
-      const response = await Axiosinstance.post('Project_assign/', formData);
+      const response = await Axiosinstance.post('Project_assign/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       console.log(response.data);
       alert('Project added successfully!');
       setProject({
@@ -77,6 +138,7 @@ const Project = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">

@@ -2,49 +2,61 @@ import React, { useState, useEffect } from 'react';
 import Axiosinstance from './Axiosinstance'; // Adjust the path as per your project structure
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
-const AssignModuleForm = ({ tlId }) => {
+const TlModuleAssignment = () => {
+    const [modules, setModules] = useState([]);
+    const [selectedModule, setSelectedModule] = useState('');
     const [developers, setDevelopers] = useState([]);
-    const [projects, setProjects] = useState([]);
     const [selectedDeveloper, setSelectedDeveloper] = useState('');
-    const [selectedProject, setSelectedProject] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        fetchModules();
         fetchDevelopers();
-        fetchAssignedProjects();
     }, []);
+
+    const fetchModules = async () => {
+        try {
+            const response = await Axiosinstance.get('get_moduless/');
+            setModules(response.data);
+        } catch (error) {
+            console.error('Failed to fetch modules:', error);
+        }
+    };
 
     const fetchDevelopers = async () => {
         try {
-            const response = await Axiosinstance.get('get_developers/');
+            const response = await Axiosinstance.get('get_developerss/');
             setDevelopers(response.data);
         } catch (error) {
             console.error('Failed to fetch developers:', error);
         }
     };
 
-    const fetchAssignedProjects = async () => {
-        try {
-            const response = await Axiosinstance.get(`assigned_projects/${tlId}/`);
-            setProjects(response.data);
-        } catch (error) {
-            console.error('Failed to fetch assigned projects:', error);
-        }
-    };
-
     const handleAssignModule = async (event) => {
         event.preventDefault();
         try {
-            // Implement your assignment logic here, using Axiosinstance.post or similar
-            console.log(`Assigning module to developer: ${selectedDeveloper} for project: ${selectedProject}`);
-            // Example of how you might structure your POST request
-            await Axiosinstance.post('assign_module/', {
-                developer: selectedDeveloper,
-                project: selectedProject,
+            const response = await Axiosinstance.post('assign_module_to_developer/', {
+                module_id: selectedModule,
+                developer_id: selectedDeveloper,
+                start_date: startDate,
+                end_date: endDate
             });
             // Handle success, maybe show a success message or reset form
+            alert('Module assigned to developer successfully.');
+            setSelectedModule('');
+            setSelectedDeveloper('');
+            setStartDate('');
+            setEndDate('');
+            setErrorMessage('');
         } catch (error) {
             console.error('Error assigning module:', error);
-            // Handle error, show error message or alert
+            if (error.response && error.response.data && error.response.data.error) {
+                setErrorMessage(error.response.data.error);
+            } else {
+                setErrorMessage('Failed to assign module. Please try again.');
+            }
         }
     };
 
@@ -52,7 +64,25 @@ const AssignModuleForm = ({ tlId }) => {
         <Container fluid className="p-3">
             <Row className="justify-content-center">
                 <Col xs={12} md={8}>
+                    <h2 className="mb-4 text-center">Assign Module to Developer</h2>
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
                     <Form onSubmit={handleAssignModule}>
+                        <Form.Group controlId="moduleDropdown">
+                            <Form.Label>Select Module</Form.Label>
+                            <Form.Control
+                                as="select"
+                                value={selectedModule}
+                                onChange={(e) => setSelectedModule(e.target.value)}
+                                required
+                            >
+                                <option value="">Select Module</option>
+                                {modules.map((module) => (
+                                    <option key={module.id} value={module.id}>
+                                        {module.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
                         <Form.Group controlId="developerDropdown">
                             <Form.Label>Select Developer</Form.Label>
                             <Form.Control
@@ -69,24 +99,26 @@ const AssignModuleForm = ({ tlId }) => {
                                 ))}
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group controlId="projectDropdown">
-                            <Form.Label>Select Project</Form.Label>
+                        <Form.Group controlId="startDate">
+                            <Form.Label>Start Date</Form.Label>
                             <Form.Control
-                                as="select"
-                                value={selectedProject}
-                                onChange={(e) => setSelectedProject(e.target.value)}
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
                                 required
-                            >
-                                <option value="">Select Project</option>
-                                {projects.map((project) => (
-                                    <option key={project.id} value={project.id}>
-                                        {project.project_name}
-                                    </option>
-                                ))}
-                            </Form.Control>
+                            />
                         </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Assign
+                        <Form.Group controlId="endDate">
+                            <Form.Label>End Date</Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Button variant="primary" type="submit" className='mt-4'>
+                            Assign Module
                         </Button>
                     </Form>
                 </Col>
@@ -95,4 +127,4 @@ const AssignModuleForm = ({ tlId }) => {
     );
 };
 
-export default AssignModuleForm;
+export default TlModuleAssignment;

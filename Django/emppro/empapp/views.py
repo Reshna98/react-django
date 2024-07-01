@@ -1,9 +1,9 @@
 from django.core.mail import send_mail
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status,generics
 from rest_framework.decorators import api_view,permission_classes,action
 from rest_framework.response import Response
-from .models import CustomUser,Project,Assignment
-from .serializers import CustomUserSerializer,LoginSerializer,ProjectSerializer,AssignmentSerializer,AdminUserCreateSerializer,TLassignmentSerializer,TlProjectSerializer,TlassignSerializer,DeveloperSerializer
+from .models import CustomUser,Project,Assignment,ModuleAssignment,Module
+from .serializers import CustomUserSerializer,LoginSerializer,ProjectSerializer,AssignmentSerializer,AdminUserCreateSerializer,TLassignmentSerializer,TlProjectSerializer,ModuleSerializer,AssignmentssSerializer,ModuleAssignmentSerializer,CustomUsersSerializer,ModulessSerializer,TeamLeadProfileSerializer,CustomUserupdateSerializer
 import random
 import string
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -293,48 +293,169 @@ def serve_project_attachment(request, projectId):
     else:
         return HttpResponse(status=404)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
-def get_developers_assigned_to_tl(request):
-    tl = request.user  # Assuming TL is authenticated user
-    developers = CustomUser.objects.filter(is_developer=True, assignment__team_lead=tl)
-    serializer = DeveloperSerializer(developers, many=True)
-    return Response(serializer.data)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
-def get_projects_assigned_to_tl(request):
-    tl = request.user  # Assuming TL is authenticated user
-    assignments = Assignment.objects.filter(team_lead=tl)
-    projects = Project.objects.filter(id__in=assignments.values_list('project_id', flat=True))
-    serializer = TlassignSerializer(projects, many=True)
-    return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Ensure TL is authenticated
+def create_module(request):
+    if request.method == 'POST':
+        assignment_id = request.data.get('assignment_id')
+        name = request.data.get('name')
+        description = request.data.get('description')
+
+        try:
+            assignment = Assignment.objects.get(id=assignment_id)
+            module = Module.objects.create(assignment=assignment, name=name, description=description)
+            serializer = ModuleSerializer(module)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_assignments(request):
+    tl = request.user
+    assignments = Assignment.objects.filter(team_lead=tl)
+    serializer = AssignmentssSerializer(assignments, many=True)
+    return Response(serializer.data)
+
+from datetime import datetime, date 
+@api_view(['POST'])
 def assign_module_to_developer(request):
-    data = request.data
-    developer_id = data.get('developer')
-    project_id = data.get('project')
+    if request.method == 'POST':
+        module_id = request.data.get('module_id')
+        developer_id = request.data.get('developer_id')
+        start_date_str = request.data.get('start_date')  # Assuming date format is 'YYYY-MM-DD'
+        end_date_str = request.data.get('end_date')
 
-    tl = request.user  # Assuming TL is authenticated user
-    assignment = get_object_or_404(Assignment, team_lead=tl, project_id=project_id)
+        try:
+            module = Module.objects.get(id=module_id)
+            developer = CustomUser.objects.get(id=developer_id)
 
-    # Create or update module assignment for the selected developer
-    developer = get_object_or_404(CustomUser, id=developer_id)
-    module_assignment, created = ModuleAssignment.objects.get_or_create(
-        module__assignment=assignment,
-        developer=developer,
-        defaults={
-            'start_date': assignment.start_date,
-            'end_date': assignment.end_date,
-        }
-    )
+            # Convert start_date and end_date from string to datetime.date objects
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
-    if not created:
-        module_assignment.start_date = assignment.start_date
-        module_assignment.end_date = assignment.end_date
-        module_assignment.save()
+            # Retrieve the assignment based on the module's assignment
+            assignment = Assignment.objects.filter(project=module.assignment.project,
+                                                   team_lead=module.assignment.team_lead).first()
 
-    return Response({'message': 'Module assigned successfully.'}, status=status.HTTP_201_CREATED)
+            if assignment:
+                # Check if provided start_date and end_date are within the assignment's start and end date
+                if assignment.start_date <= start_date <= assignment.end_date and \
+                   assignment.start_date <= end_date <= assignment.end_date:
+                    # Create ModuleAssignment
+                    module_assignment = ModuleAssignment.objects.create(
+                        module=module,
+                        developer=developer,
+                        start_date=start_date,
+                        end_date=end_date
+                    )
+                    serializer = ModuleAssignmentSerializer(module_assignment)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'error': 'Start date or end date is not within the assigned project period'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'No active assignment found for the module'},
+                                status=status.HTTP_404_NOT_FOUND)
 
+        except Module.DoesNotExist:
+            return Response({'error': 'Module not found'}, status=status.HTTP_404_NOT_FOUND)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Developer not found'}, status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response({'error': 'Invalid date format provided'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_developerss(request):
+    if request.method == 'GET':
+        developers = CustomUser.objects.filter(is_developer=True)
+        serializer = CustomUserSerializer(developers, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+def get_moduless(request):
+    if request.method == 'GET':
+        modules = Module.objects.all()  # Fetch all modules or apply filters as needed
+        serializer = ModuleSerializer(modules, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+def tl_profile(request):
+    user = request.user
+    if user.is_team_lead:
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
+    else:
+        return Response({'error': 'User is not a Team Lead'}, status=403)
+
+def download_attachment(request, projectId):
+    project = get_object_or_404(Project, pk=projectId)
+
+    if project.attachments:
+        file_path = project.attachments.path
+        if file_path and os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/octet-stream")
+                response['Content-Disposition'] = f'attachments; filename="{os.path.basename(file_path)}"'
+                return response
+        else:
+            return HttpResponseNotFound("Attachment file not found")
+    else:
+        return HttpResponseNotFound("No attachment found for this project")
+
+@api_view(['GET'])
+def download_certification(request, userId):
+    user = CustomUser.objects.get(pk=userId)
+    if user.certification:
+        file_path = user.certification.path
+        if file_path and os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/octet-stream")
+                response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
+                return response
+        else:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=404)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def tllogout(request):
+    try:
+        refresh_token = request.data.get('refresh_token')
+        if refresh_token is None:
+            return Response({'detail': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_tl_profile(request):
+    user = request.user
+
+    serializer = CustomUserupdateSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        # Check if 'certification' is provided and is not None
+        if 'certification' in request.data and request.data['certification'] is not None:
+            serializer.validated_data['certification'] = request.data['certification']
+        if CustomUser.objects.filter(email=profile_data.get('email')).exclude(id=request.user.id).exists():
+            return Response({'email': ['Email already exists. Please use a different email.']}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -99,4 +99,3 @@ class Notification(models.Model):
         return self.message
 
 
-    

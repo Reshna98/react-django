@@ -230,13 +230,55 @@ class TlProjectSerializer(serializers.ModelSerializer):
         if obj.attachments:
             return request.build_absolute_uri(obj.attachments.url)
         return None
+# ----------------------------
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ['id', 'assignment', 'name', 'description']
 
-class DeveloperSerializer(serializers.ModelSerializer):
+class AssignmentssSerializer(serializers.ModelSerializer):
+    project_name = serializers.CharField(source='project.project_name', read_only=True)
+
+    class Meta:
+        model = Assignment
+        fields = ['id', 'project', 'project_name', 'start_date', 'end_date']
+
+class ModuleAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModuleAssignment
+        fields = ['id', 'module', 'developer', 'start_date', 'end_date']
+
+class CustomUsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username']
+        fields = ['id', 'username']  # Add more fields as needed
 
-class TlassignSerializer(serializers.ModelSerializer):
+class ModulessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Project
-        fields = ['id', 'project_name']
+        model = Module
+        fields = ['id', 'name'] 
+
+class TeamLeadProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'address', 'course_completed', 'certification', 'department']
+
+
+class CustomUserupdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'address', 'course_completed', 'certification', 'department']
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.address = validated_data.get('address', instance.address)
+        instance.course_completed = validated_data.get('course_completed', instance.course_completed)
+        instance.department = validated_data.get('department', instance.department)
+        
+        # Check if 'certification' is provided and is not None
+        if 'certification' in validated_data and validated_data['certification'] is not None:
+            instance.certification = validated_data['certification']
+        
+        instance.save()
+        return instance

@@ -34,6 +34,12 @@ function TlSidebar() {
           </Link>
         </li>
         <li className='nav-item p-1 mt-auto'>
+          <Link to="/tlmodule" className='nav-link'>
+            <i className='bi bi-speedometer2 me-2 fs-4 text-white' />
+            <span className='fs-5 text-white'><strong>Assign Modules</strong></span>
+          </Link>
+        </li>
+        <li className='nav-item p-1 mt-auto'>
           <Link to="/tlassignpro" className='nav-link'>
             <i className='bi bi-speedometer2 me-2 fs-4 text-white' />
             <span className='fs-5 text-white'><strong>Assign Projects</strong></span>
@@ -51,7 +57,7 @@ function TlSidebar() {
       </ul>
       <hr className='text-white mt-4' />
       <div className='nav-item p-2 mt-auto'>
-        <Link to="/" className='nav-link'>
+        <Link to="/profile" className='nav-link'>
           <i className='bi bi-person-circle me-2 fs-4'></i>
           <span className='fs-5'><strong>Profile</strong></span>
         </Link>

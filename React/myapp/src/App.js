@@ -21,6 +21,9 @@ import Addelete from './Addelete.jsx';
 import Adpromote from './Adpromote.jsx';
 import Tlassign from './TLassign.jsx';
 import Tlassignpro from './Tlassignpro.jsx';
+import Tlmoduleassign from './Tlmoduleassign.jsx';
+import Tlprofiledas from './Tlprofiledas.jsx';
+import Tleditpro from './Tleditpro.jsx';
 
 
 function App() {
@@ -45,6 +48,11 @@ function App() {
         <Route path="/tlnotification" element={<Tlassign/>} />
         <Route path="/tl-dashboard" element={<Tldash />} />
         <Route path="/tlassignpro" element={<Tlassignpro/>} />
+        <Route path="/tlmodule" element={<Tlmoduleassign/>} />
+        <Route path="/profile" element={<Tlprofiledas/>} />
+        <Route path="/editprofile" element={<Tleditpro/>} />
+
+
 
 
       </Routes>
